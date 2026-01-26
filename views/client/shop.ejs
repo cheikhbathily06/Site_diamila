@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">
+        <% if (logo) { %><img src="<%= logo %>" alt="Logo"><% } %>
+        <h1>Denisia Bijoux</h1>
+      </a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/boutique">Boutique</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a href="/panier" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <% if (cartCount > 0) { %><span class="cart-count"><%= cartCount %></span><% } %>
+        </a>
+        <div class="mobile-menu-toggle"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1 class="section-title">Notre Boutique</h1>
+      
+      <div class="shop-filters">
+        <button class="filter-btn <%= category === 'all' ? 'active' : '' %>" onclick="filterProducts('all')">Tous</button>
+        <button class="filter-btn <%= category === 'bijou' ? 'active' : '' %>" onclick="filterProducts('bijou')">Bijoux</button>
+        <button class="filter-btn <%= category === 'bracelet_simple' ? 'active' : '' %>" onclick="filterProducts('bracelet_simple')">Bracelets Simples</button>
+        <button class="filter-btn <%= category === 'bracelet_personnalise' ? 'active' : '' %>" onclick="filterProducts('bracelet_personnalise')">Bracelets Personnalisés</button>
+        <button class="filter-btn <%= category === 'box_cadeau' ? 'active' : '' %>" onclick="filterProducts('box_cadeau')">Boxes Cadeaux</button>
+      </div>
+      
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card" onclick="window.location.href='/produit/<%= product._id %>'">
+            <div class="product-image">
+              <% if (product.images && product.images.length > 0) { %>
+                <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+              <% } else { %>
+                <div style="background-color: #f0f0f0; width: 100%; height: 100%;"></div>
+              <% } %>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name"><%= product.name %></h3>
+              <p class="product-price"><%= product.price.toLocaleString('fr-FR') %> FCFA</p>
+              <% if (!product.inStock) { %><p class="out-of-stock">Rupture de stock</p><% } %>
+              <% if (product.isPersonalized) { %><p style="color: var(--primary-color);"><i class="fas fa-pen"></i> Personnalisable</p><% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section"><h3>Denisia Bijoux</h3><p>Bijoux en acier inoxydable</p></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; <%= new Date().getFullYear() %> Denisia Bijoux</p></div>
+  </footer>
+  <script src="/js/main.js"></script>
+  <script src="/js/mobile.js"></script>
+</body>
+</html>

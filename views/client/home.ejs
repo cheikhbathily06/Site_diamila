@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">
+        <% if (logo) { %>
+          <img src="<%= logo %>" alt="Denisia Bijoux Logo">
+        <% } %>
+        <h1>Denisia Bijoux</h1>
+      </a>
+      
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/boutique">Boutique</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      
+      <div class="header-actions">
+        <!-- AJOUT 2: Liens réseaux sociaux dans le header -->
+        <div class="header-social-links">
+          <a href="https://www.instagram.com/denisia_bijoux/" target="_blank" rel="noopener noreferrer" class="instagram" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.tiktok.com/@denisia_bijoux?lang=fr" target="_blank" rel="noopener noreferrer" class="tiktok" title="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a href="https://wa.me/221767378528" target="_blank" rel="noopener noreferrer" class="whatsapp" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+        
+        <a href="/panier" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <% if (cartCount > 0) { %>
+            <span class="cart-count"><%= cartCount %></span>
+          <% } %>
+        </a>
+        
+        <div class="mobile-menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h2>Denisia Bijoux</h2>
+      <p>Bijoux en acier inoxydable de qualité ✨</p>
+      <a href="/boutique" class="btn-primary">Découvrir la collection</a>
+    </section>
+    
+    <!-- Produits en vedette -->
+    <section class="container">
+      <h2 class="section-title">Nos Produits Phares</h2>
+      
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card" onclick="window.location.href='/produit/<%= product._id %>'">
+            <div class="product-image">
+              <% if (product.images && product.images.length > 0) { %>
+                <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+              <% } else { %>
+                <div style="background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                  <i class="fas fa-gem" style="font-size: 3rem; color: #d4a853;"></i>
+                </div>
+              <% } %>
+            </div>
+            
+            <div class="product-info">
+              <h3 class="product-name"><%= product.name %></h3>
+              <p class="product-price"><%= product.price.toLocaleString('fr-FR') %> FCFA</p>
+              
+              <% if (!product.inStock) { %>
+                <p class="out-of-stock">Rupture de stock</p>
+              <% } %>
+              
+              <% if (product.isPersonalized) { %>
+                <p style="color: var(--primary-color); margin-top: 0.5rem;">
+                  <i class="fas fa-pen"></i> Personnalisable
+                </p>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+      
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="/boutique" class="btn-primary">Voir tous les produits</a>
+      </div>
+    </section>
+    
+    <!-- Catégories -->
+    <section class="container" style="background-color: #f9f9f9; padding: 3rem 2rem; border-radius: 10px;">
+      <h2 class="section-title">Nos Catégories</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+        <a href="/boutique?category=bijou" style="text-decoration: none;">
+          <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fas fa-gem" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--secondary-color);">Bijoux</h3>
+            <p style="color: #666;">Colliers, bagues, boucles d'oreilles</p>
+          </div>
+        </a>
+        
+        <a href="/boutique?category=bracelet_simple" style="text-decoration: none;">
+          <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fas fa-circle" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--secondary-color);">Bracelets Simples</h3>
+            <p style="color: #666;">Élégants et intemporels</p>
+          </div>
+        </a>
+        
+        <a href="/boutique?category=bracelet_personnalise" style="text-decoration: none;">
+          <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fas fa-pen-fancy" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--secondary-color);">Bracelets Personnalisés</h3>
+            <p style="color: #666;">Créez votre bijou unique</p>
+          </div>
+        </a>
+        
+        <a href="/boutique?category=box_cadeau" style="text-decoration: none;">
+          <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fas fa-gift" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--secondary-color);">Boxes Cadeaux</h3>
+            <p style="color: #666;">Ensembles parfaits</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Denisia Bijoux</h3>
+        <p>Bijoux en acier inoxydable de qualité</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Navigation</h3>
+        <ul>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/boutique">Boutique</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Suivez-nous</h3>
+        <!-- AJOUT 2: Liens réseaux sociaux mis à jour -->
+        <div class="social-links">
+          <a href="https://www.instagram.com/denisia_bijoux/" target="_blank" rel="noopener noreferrer" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.tiktok.com/@denisia_bijoux?lang=fr" target="_blank" rel="noopener noreferrer" title="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a href="https://wa.me/221767378528" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Denisia Bijoux. Tous droits réservés.</p>
+    </div>
+  </footer>
+  
+  <script src="/js/main.js"></script>
+  <script src="/js/mobile.js"></script>
+</body>
+</html>

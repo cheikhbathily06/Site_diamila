@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .image-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .preview-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+    .btn-remove-image {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    .btn-remove-image:hover {
+      background: #d32f2f;
+      transform: scale(1.1);
+    }
+    .form-help {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+  </style>
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body class="admin-layout">
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <h2>Denisia Bijoux</h2>
+        <p><%= adminEmail %></p>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="/admin/products" class="active"><i class="fas fa-gem"></i> Produits</a></li>
+        <li><a href="/admin/orders"><i class="fas fa-shopping-bag"></i> Commandes</a></li>
+        <li><a href="/admin/delivery-zones"><i class="fas fa-truck"></i> Livraison</a></li>
+        <li><a href="/admin/pages"><i class="fas fa-file-alt"></i> Pages</a></li>
+      </ul>
+      <a href="/admin/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div class="admin-content">
+      <div class="admin-header">
+        <h1><%= product ? 'Modifier' : 'Ajouter' %> un produit</h1>
+        <a href="/admin/products" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <!-- CORRECTION: enctype="multipart/form-data" est OBLIGATOIRE pour upload de fichiers -->
+      <form 
+        action="<%= product ? '/admin/products/update/' + product._id : '/admin/products/create' %>" 
+        method="POST" 
+        enctype="multipart/form-data" 
+        class="form-container">
+
+        <div class="form-section">
+          <h3>Informations générales</h3>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Nom du produit *</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                value="<%= product ? product.name : '' %>" 
+                required 
+                placeholder="Ex: Bracelet en acier doré">
+            </div>
+
+            <div class="form-group">
+              <label for="price">Prix (FCFA) *</label>
+              <input 
+                type="number" 
+                id="price" 
+                name="price" 
+                value="<%= product ? product.price : '' %>" 
+                required 
+                min="0" 
+                step="1"
+                placeholder="Ex: 15000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea 
+              id="description" 
+              name="description" 
+              required 
+              rows="4"
+              placeholder="Décrivez le produit..."><%= product ? product.description : '' %></textarea>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="category">Catégorie *</label>
+              <select id="category" name="category" required>
+                <option value="bijou" <%= product && product.category === 'bijou' ? 'selected' : '' %>>Bijou</option>
+                <option value="bracelet_simple" <%= product && product.category === 'bracelet_simple' ? 'selected' : '' %>>Bracelet Simple</option>
+                <option value="bracelet_personnalise" <%= product && product.category === 'bracelet_personnalise' ? 'selected' : '' %>>Bracelet Personnalisé</option>
+                <option value="box_cadeau" <%= product && product.category === 'box_cadeau' ? 'selected' : '' %>>Box Cadeau</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="stock">Stock disponible *</label>
+              <input 
+                type="number" 
+                id="stock" 
+                name="stock" 
+                value="<%= product ? product.stock : 0 %>" 
+                required 
+                min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Personnalisation</h3>
+          
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="isPersonalized" 
+                id="isPersonalized" 
+                value="true" 
+                <%= product && product.isPersonalized ? 'checked' : '' %>
+                onchange="togglePersonalization()">
+              <span>Produit personnalisable</span>
+            </label>
+          </div>
+
+          <div id="personalization-options" style="display: <%= product && product.isPersonalized ? 'block' : 'none' %>;">
+            <div class="form-group">
+              <label for="maxCharacters">Nombre maximum de caractères</label>
+              <input 
+                type="number" 
+                id="maxCharacters" 
+                name="maxCharacters" 
+                value="<%= product ? product.maxCharacters : 20 %>" 
+                min="0" 
+                max="50">
+              <small class="form-help">Limite de caractères pour la personnalisation</small>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="hasCountdown" 
+                  id="hasCountdown" 
+                  value="true" 
+                  <%= product && product.hasCountdown ? 'checked' : '' %>>
+                <span>Activer le compte à rebours (17h)</span>
+              </label>
+              <small class="form-help">Affiche un compte à rebours pour la livraison le jour même</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Images du produit</h3>
+          
+          <div class="form-group">
+            <label for="images">Ajouter des images (max 5)</label>
+            <!-- CORRECTION: name="images" avec multiple pour plusieurs fichiers -->
+            <input 
+              type="file" 
+              id="images" 
+              name="images" 
+              multiple 
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+              onchange="previewImages(this, 'image-preview')">
+            <small class="form-help">Formats acceptés: JPG, PNG, GIF, WEBP. Max 5 MB par image.</small>
+          </div>
+
+          <div id="image-preview" class="image-preview-grid">
+            <% if (product && product.images && product.images.length > 0) { %>
+              <% product.images.forEach(img => { %>
+                <div class="preview-item">
+                  <img src="<%= img %>" alt="Image produit" class="preview-image">
+                  <button 
+                    type="button" 
+                    class="btn-remove-image" 
+                    onclick="deleteProductImage('<%= product._id %>', '<%= img %>')">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Options</h3>
+          
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="isActive" 
+                id="isActive" 
+                value="true" 
+                <%= !product || product.isActive ? 'checked' : '' %>>
+              <span>Produit actif (visible sur le site)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Enregistrer le produit
+          </button>
+          <a href="/admin/products" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Annuler
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    // CORRECTION: Fonction pour afficher/masquer les options de personnalisation
+    function togglePersonalization() {
+      const checkbox = document.getElementById('isPersonalized');
+      const options = document.getElementById('personalization-options');
+      options.style.display = checkbox.checked ? 'block' : 'none';
+    }
+
+    // CORRECTION: Prévisualisation des images avant upload
+    function previewImages(input, containerId) {
+      const container = document.getElementById(containerId);
+      
+      if (input.files && input.files.length > 0) {
+        // Nettoyer les anciennes prévisualisations temporaires
+        container.querySelectorAll('.new-preview').forEach(el => el.remove());
+        
+        Array.from(input.files).forEach(file => {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'preview-item new-preview';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-image';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn-remove-image';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = function() {
+              previewDiv.remove();
+            };
+            
+            previewDiv.appendChild(img);
+            previewDiv.appendChild(removeBtn);
+            container.appendChild(previewDiv);
+          };
+          
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    // CORRECTION: Supprimer une image existante
+    async function deleteProductImage(productId, imageUrl) {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) return;
+      
+      try {
+        const response = await fetch(`/admin/products/${productId}/delete-image`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ imageUrl })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          location.reload();
+        } else {
+          alert('Erreur lors de la suppression de l\'image');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la suppression de l\'image');
+      }
+    }
+  </script>
+</body>
+</html>

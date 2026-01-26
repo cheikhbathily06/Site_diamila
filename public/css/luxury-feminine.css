@@ -1,0 +1,637 @@
+/* ===============================================
+   SITEAMALA04 - DESIGN FÉMININ & LUXUEUX
+   Palette: Rose doré, crème, blanc nacré
+   =============================================== */
+
+:root {
+  /* Palette principale - Féminine & Luxueuse */
+  --primary: linear-gradient(135deg, #d4a574 0%, #e8c4a8 50%, #d4a574 100%);
+  --primary-solid: #d4a574;
+  --primary-light: #e8c4a8;
+  --primary-dark: #b8926b;
+  
+  --rose-gold: linear-gradient(135deg, #b76e79 0%, #d4a574 100%);
+  --rose-gold-solid: #b76e79;
+  
+  --cream: #faf8f5;
+  --pearl-white: #fefefe;
+  --soft-pink: #f5e6e8;
+  --dusty-rose: #d4a5a5;
+  
+  /* Couleurs secondaires */
+  --text-primary: #2d2424;
+  --text-secondary: #6b5b5b;
+  --text-muted: #9d8b8b;
+  
+  /* Accents */
+  --gold-shimmer: #f4e4c1;
+  --bronze: #cd7f32;
+  --champagne: #f7e7ce;
+  
+  /* Ombres luxueuses */
+  --shadow-soft: 0 4px 20px rgba(183, 110, 121, 0.08);
+  --shadow-elegant: 0 8px 30px rgba(212, 165, 116, 0.15);
+  --shadow-luxury: 0 12px 40px rgba(183, 110, 121, 0.2);
+  --shadow-hover: 0 15px 50px rgba(212, 165, 116, 0.25);
+  
+  /* Transitions douces */
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-elegant: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ===============================================
+   TYPOGRAPHIE ÉLÉGANTE
+   =============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-primary);
+  background: var(--cream);
+  letter-spacing: 0.3px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  background: var(--rose-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 500;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+/* Séparateurs décoratifs */
+.section-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: var(--rose-gold);
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+/* ===============================================
+   HEADER LUXUEUX
+   =============================================== */
+
+header {
+  background: var(--pearl-white);
+  box-shadow: var(--shadow-soft);
+  border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  background: transparent;
+}
+
+.logo h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-style: italic;
+  background: var(--rose-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(183, 110, 121, 0.1);
+}
+
+.nav-menu a {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.nav-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: var(--rose-gold);
+  transition: transform 0.3s ease;
+}
+
+.nav-menu a:hover {
+  color: var(--rose-gold-solid);
+}
+
+.nav-menu a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Icônes dorées */
+.header-social-links a {
+  background: var(--rose-gold);
+  box-shadow: var(--shadow-soft);
+}
+
+.header-social-links a:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: var(--shadow-elegant);
+}
+
+.cart-icon {
+  color: var(--rose-gold-solid);
+  transition: var(--transition-smooth);
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 10px rgba(183, 110, 121, 0.3));
+}
+
+.cart-count {
+  background: var(--rose-gold);
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.3);
+}
+
+/* ===============================================
+   HERO SECTION ÉLÉGANTE
+   =============================================== */
+
+.hero {
+  background: linear-gradient(135deg, var(--cream) 0%, var(--soft-pink) 100%);
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L100 50 L50 100 L0 50 Z' fill='%23d4a574' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 200px;
+  opacity: 0.5;
+}
+
+/* ===============================================
+   CARTES PRODUITS LUXUEUSES
+   =============================================== */
+
+.product-card,
+.card {
+  background: var(--pearl-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-elegant);
+  border: 1px solid rgba(212, 165, 116, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(244, 228, 193, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+.product-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.08);
+}
+
+/* Badge "Nouveau" élégant */
+.badge-new {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--rose-gold);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-elegant);
+  z-index: 10;
+}
+
+.product-info {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.product-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.product-price {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  background: var(--rose-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+/* ===============================================
+   BOUTONS LUXUEUX
+   =============================================== */
+
+.btn,
+button[type="submit"],
+.btn-primary {
+  background: var(--rose-gold);
+  color: white;
+  border: none;
+  padding: clamp(0.85rem, 1.8vw, 1.1rem) clamp(1.75rem, 3.5vw, 2.5rem);
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition-elegant);
+  box-shadow: var(--shadow-elegant);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transition: transform 0.5s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-luxury);
+}
+
+.btn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--primary-solid);
+  color: var(--primary-solid);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-solid);
+  color: white;
+}
+
+/* Bouton "Confirmer commande" ultra-luxueux */
+.btn-confirm-order-beautiful {
+  background: var(--rose-gold);
+  min-height: 80px;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  box-shadow: var(--shadow-luxury);
+  border-radius: 16px;
+}
+
+.btn-confirm-order-beautiful .btn-icon-wrapper {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+}
+
+.btn-confirm-order-beautiful .btn-main-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+/* ===============================================
+   FORMULAIRES ÉLÉGANTS
+   =============================================== */
+
+.form-group label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  border: 2px solid rgba(212, 165, 116, 0.2);
+  border-radius: 12px;
+  background: var(--pearl-white);
+  color: var(--text-primary);
+  transition: var(--transition-smooth);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--primary-solid);
+  box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+  background: white;
+}
+
+/* ===============================================
+   BADGES & ÉTIQUETTES
+   =============================================== */
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background: linear-gradient(135deg, #a8d5ba 0%, #7fb89c 100%);
+  color: white;
+}
+
+.badge-warning {
+  background: linear-gradient(135deg, #f4c89f 0%, #e8a87c 100%);
+  color: white;
+}
+
+.badge-danger {
+  background: linear-gradient(135deg, #e8a5a5 0%, #d47979 100%);
+  color: white;
+}
+
+.badge-info {
+  background: linear-gradient(135deg, #a5c4e8 0%, #7fa4d4 100%);
+  color: white;
+}
+
+/* ===============================================
+   FOOTER LUXUEUX
+   =============================================== */
+
+footer {
+  background: linear-gradient(135deg, var(--text-primary) 0%, #3d2f2f 100%);
+  color: var(--cream);
+  margin-top: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rose-gold);
+}
+
+.footer-section h3 {
+  color: var(--gold-shimmer);
+  font-family: 'Cormorant Garamond', serif;
+  margin-bottom: 1.5rem;
+}
+
+.footer-section a {
+  color: var(--cream);
+  transition: var(--transition-smooth);
+}
+
+.footer-section a:hover {
+  color: var(--gold-shimmer);
+  padding-left: 5px;
+}
+
+.social-links a {
+  background: rgba(212, 165, 116, 0.15);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.social-links a:hover {
+  background: var(--rose-gold);
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
+}
+
+.footer-bottom {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+/* ===============================================
+   ANIMATIONS LUXUEUSES
+   =============================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 228, 193, 0.3),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ===============================================
+   ADMIN LUXUEUX
+   =============================================== */
+
+.admin-sidebar {
+  background: linear-gradient(180deg, var(--text-primary) 0%, #3d2f2f 100%);
+  border-right: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.sidebar-header h2 {
+  color: var(--gold-shimmer);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+
+.sidebar-menu a {
+  color: var(--cream);
+  transition: var(--transition-smooth);
+  border-left: 3px solid transparent;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background: rgba(212, 165, 116, 0.1);
+  border-left-color: var(--primary-light);
+  color: var(--gold-shimmer);
+}
+
+.data-table {
+  background: var(--pearl-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.data-table th {
+  background: linear-gradient(135deg, var(--soft-pink) 0%, var(--champagne) 100%);
+  color: var(--text-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+}
+
+.data-table tr:hover {
+  background: var(--soft-pink);
+}
+
+/* ===============================================
+   RESPONSIVE TOUCH
+   =============================================== */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .product-card {
+    border-radius: 16px;
+  }
+  
+  .btn {
+    width: 100%;
+    border-radius: 12px;
+  }
+}
+
+/* ===============================================
+   EFFETS SPÉCIAUX LUXE
+   =============================================== */
+
+/* Bordure dorée animée */
+.luxury-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              var(--rose-gold) border-box;
+}
+
+/* Effet de brillance */
+.sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.sparkle::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(244, 228, 193, 0.3) 0%, transparent 70%);
+  animation: sparkle-rotate 8s linear infinite;
+}
+
+@keyframes sparkle-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dégradé de texte doré */
+.gold-text {
+  background: var(--rose-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

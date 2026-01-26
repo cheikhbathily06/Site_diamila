@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">
+        <% if (logo) { %><img src="<%= logo %>" alt="Logo"><% } %>
+        <h1>Denisia Bijoux</h1>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="checkout-container container">
+      <h1 class="section-title">Finaliser ma commande</h1>
+
+      <div class="checkout-grid">
+        <!-- Formulaire -->
+        <div class="checkout-form-section">
+          <form id="checkout-form" onsubmit="submitOrder(event)">
+            <div class="form-section">
+              <h3><i class="fas fa-user"></i> Informations personnelles</h3>
+              
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="firstName">Prénom *</label>
+                  <input type="text" id="firstName" name="firstName" required placeholder="Votre prénom">
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Nom *</label>
+                  <input type="text" id="lastName" name="lastName" required placeholder="Votre nom">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="votre.email@example.com">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Téléphone *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="+221 XX XXX XX XX">
+              </div>
+
+              <div class="form-group">
+                <label for="address">Adresse de livraison *</label>
+                <textarea id="address" name="address" required rows="3" placeholder="Votre adresse complète"></textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3><i class="fas fa-truck"></i> Livraison</h3>
+              
+              <div class="form-group">
+                <label for="delivery-zone">Zone de livraison *</label>
+                <select id="delivery-zone" name="deliveryZone" required onchange="calculateCartTotal()">
+                  <option value="">Sélectionnez une zone</option>
+                  <% deliveryZones.forEach(zone => { %>
+                    <option value="<%= zone._id %>" data-price="<%= zone.price %>">
+                      <%= zone.name %> - <%= zone.price.toLocaleString('fr-FR') %> FCFA
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3><i class="fas fa-credit-card"></i> Mode de paiement</h3>
+              
+              <%
+              // MODIFICATION 1 & 4: Vérifier si produits personnalisés (Wave obligatoire)
+              let hasPersonalized = false;
+              cart.forEach(item => {
+                if (item.isPersonalized) {
+                  hasPersonalized = true;
+                }
+              });
+              %>
+
+              <% if (hasPersonalized) { %>
+                <!-- Si produit personnalisé : Wave uniquement -->
+                <input type="hidden" name="paymentMethod" value="online">
+                <div class="payment-option selected">
+                  <div class="payment-radio">
+                    <input type="radio" id="payment-wave" checked disabled>
+                    <label for="payment-wave">
+                      <i class="fas fa-mobile-alt"></i>
+                      <div>
+                        <strong>Paiement en ligne (Wave)</strong>
+                        <p>Paiement sécurisé par Wave</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="payment-info info-warning">
+                  <i class="fas fa-info-circle"></i>
+                  Le paiement en ligne (Wave) est obligatoire pour les produits personnalisés
+                </div>
+              <% } else { %>
+                <!-- Choix entre Wave et paiement à la livraison -->
+                <div class="payment-options">
+                  <div class="payment-option">
+                    <div class="payment-radio">
+                      <input type="radio" id="payment-wave" name="paymentMethod" value="online" required>
+                      <label for="payment-wave">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                          <strong>Paiement en ligne (Wave)</strong>
+                          <p>Paiement sécurisé et rapide</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="payment-option">
+                    <div class="payment-radio">
+                      <input type="radio" id="payment-delivery" name="paymentMethod" value="delivery" required>
+                      <label for="payment-delivery">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                          <strong>Paiement à la livraison</strong>
+                          <p>Payez en espèces à réception</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+
+            <!-- MODIFICATION FINALE 2: Bouton de confirmation magnifique -->
+            <button type="submit" class="btn-confirm-order-beautiful">
+              <span class="btn-icon-wrapper">
+                <i class="fas fa-check-circle"></i>
+              </span>
+              <span class="btn-text-wrapper">
+                <span class="btn-main-text">Confirmer ma commande</span>
+                <span class="btn-sub-text">Paiement sécurisé 🔒</span>
+              </span>
+              <span class="btn-shine"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- MODIFICATION 1: Récapitulatif avec total calculé -->
+        <div class="checkout-summary-section">
+          <div class="summary-card">
+            <h3>Récapitulatif de la commande</h3>
+            
+            <div class="summary-items">
+              <% 
+              let subtotal = 0;
+              cart.forEach(item => { 
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+              %>
+                <div class="summary-item">
+                  <div class="summary-item-details">
+                    <p class="item-name"><%= item.name %></p>
+                    <% if (item.personalizationText) { %>
+                      <p class="item-personalization">
+                        <i class="fas fa-pen"></i> "<%= item.personalizationText %>"
+                      </p>
+                    <% } %>
+                    <p class="item-quantity">Quantité: <%= item.quantity %></p>
+                  </div>
+                  <p class="item-price"><%= itemTotal.toLocaleString('fr-FR') %> FCFA</p>
+                </div>
+              <% }) %>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-totals">
+              <div class="summary-row">
+                <span>Sous-total:</span>
+                <span id="cart-subtotal"><%= subtotal.toLocaleString('fr-FR') %> FCFA</span>
+              </div>
+              
+              <div class="summary-row">
+                <span>Livraison:</span>
+                <span id="cart-delivery">Sélectionnez une zone</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-row summary-total">
+                <span><strong>Total à payer:</strong></span>
+                <span id="cart-total"><strong><%= subtotal.toLocaleString('fr-FR') %> FCFA</strong></span>
+              </div>
+            </div>
+
+            <div class="summary-note">
+              <i class="fas fa-shield-alt"></i>
+              Paiement 100% sécurisé
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Denisia Bijoux</p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // MODIFICATION 1: Calcul automatique du total avec livraison
+    function calculateCartTotal() {
+      const deliverySelect = document.getElementById('delivery-zone');
+      const deliveryPrice = deliverySelect ? parseFloat(deliverySelect.options[deliverySelect.selectedIndex]?.dataset.price || 0) : 0;
+      const subtotal = <%= subtotal %>;
+      const total = subtotal + deliveryPrice;
+
+      const deliveryElement = document.getElementById('cart-delivery');
+      const totalElement = document.getElementById('cart-total');
+
+      if (deliveryElement) {
+        if (deliveryPrice > 0) {
+          deliveryElement.innerHTML = '<strong>' + deliveryPrice.toLocaleString('fr-FR') + ' FCFA</strong>';
+        } else {
+          deliveryElement.textContent = 'Sélectionnez une zone';
+        }
+      }
+
+      if (totalElement) {
+        totalElement.innerHTML = '<strong>' + total.toLocaleString('fr-FR') + ' FCFA</strong>';
+      }
+    }
+
+    // Initialiser le calcul au chargement
+    document.addEventListener('DOMContentLoaded', () => {
+      const deliverySelect = document.getElementById('delivery-zone');
+      if (deliverySelect) {
+        deliverySelect.addEventListener('change', calculateCartTotal);
+      }
+    });
+  </script>
+  <script src="/js/mobile.js"></script>
+</body>
+</html>

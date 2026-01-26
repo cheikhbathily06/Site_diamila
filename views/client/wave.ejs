@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <style>
+    .wave-container {
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .wave-logo {
+      width: 150px;
+      height: auto;
+      margin-bottom: 30px;
+    }
+    .wave-amount {
+      font-size: 2.5rem;
+      color: #d4a853;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+    .wave-info {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    .wave-button {
+      background: linear-gradient(135deg, #00b8d4 0%, #0097a7 100%);
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+    .wave-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 184, 212, 0.3);
+    }
+    .wave-icon {
+      font-size: 4rem;
+      color: #00b8d4;
+      margin-bottom: 20px;
+    }
+  </style>
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">
+        <% if (logo) { %><img src="<%= logo %>" alt="Logo"><% } %>
+        <h1>Denisia Bijoux</h1>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wave-container">
+      <div class="wave-icon">💳</div>
+      <h1 style="color: #2c2c2c; margin-bottom: 10px;">Paiement Wave</h1>
+      <p style="color: #666; margin-bottom: 30px;">Commande #<%= order.orderNumber %></p>
+      
+      <div class="wave-amount"><%= order.total.toLocaleString('fr-FR') %> FCFA</div>
+      
+      <div class="wave-info">
+        <h3 style="color: #00b8d4; margin-top: 0;">📱 Instructions de paiement</h3>
+        <ol style="text-align: left; color: #666; line-height: 1.8;">
+          <li>Ouvrez votre application <strong>Wave</strong></li>
+          <li>Scannez le QR code ou saisissez le numéro marchand</li>
+          <li>Confirmez le montant de <strong><%= order.total.toLocaleString('fr-FR') %> FCFA</strong></li>
+          <li>Validez le paiement avec votre code PIN</li>
+          <li>Cliquez sur le bouton ci-dessous après validation</li>
+        </ol>
+      </div>
+      
+      <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0;">
+        <p style="margin: 0; color: #856404;">
+          ⚠️ <strong>Note:</strong> Dans cette démo, le paiement Wave est simulé. 
+          Cliquez sur le bouton pour confirmer votre commande.
+        </p>
+        <p style="margin: 10px 0 0 0; color: #856404; font-size: 0.9rem;">
+          En production, vous seriez redirigé vers l'interface Wave réelle.
+        </p>
+      </div>
+      
+      <button id="confirm-payment-btn" onclick="confirmWavePayment('<%= order._id %>')" class="wave-button">
+        ✅ Confirmer le paiement Wave
+      </button>
+      
+      <p style="margin-top: 30px; color: #999; font-size: 0.9rem;">
+        Paiement sécurisé par Wave
+      </p>
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+  <script>
+    /**
+     * CORRECTION 4: Fonction de confirmation de paiement Wave
+     */
+    async function confirmWavePayment(orderId) {
+      const confirmButton = document.getElementById('confirm-payment-btn');
+      const originalText = confirmButton.textContent;
+      confirmButton.disabled = true;
+      confirmButton.textContent = '⏳ Traitement en cours...';
+      
+      try {
+        const response = await fetch(`/paiement/wave/confirmer/${orderId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          confirmButton.textContent = '✅ Paiement confirmé !';
+          confirmButton.style.background = '#4caf50';
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 1000);
+        } else {
+          alert(data.message || 'Erreur lors de la confirmation');
+          confirmButton.disabled = false;
+          confirmButton.textContent = originalText;
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la confirmation du paiement');
+        confirmButton.disabled = false;
+        confirmButton.textContent = originalText;
+      }
+    }
+  </script>
+  <script src="/js/mobile.js"></script>
+</body>
+</html>

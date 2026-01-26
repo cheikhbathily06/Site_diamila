@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo"><% if (logo) { %><img src="<%= logo %>" alt="Logo"><% } %><h1>Denisia Bijoux</h1></a>
+      <nav><ul class="nav-menu"><li><a href="/">Accueil</a></li><li><a href="/boutique">Boutique</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul></nav>
+      <div class="header-actions"><a href="/panier" class="cart-icon"><i class="fas fa-shopping-cart"></i><% if (cartCount > 0) { %><span class="cart-count"><%= cartCount %></span><% } %></a></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="product-detail">
+        <div class="product-gallery">
+          <% if (product.images && product.images.length > 0) { %>
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="main-image" id="main-product-image">
+            <div class="thumbnail-images">
+              <% product.images.forEach((img, index) => { %>
+                <img src="<%= img %>" alt="<%= product.name %>" class="thumbnail <%= index === 0 ? 'active' : '' %>">
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+        
+        <div class="product-details-info">
+          <h1><%= product.name %></h1>
+          <p class="product-price-detail"><%= product.price.toLocaleString('fr-FR') %> FCFA</p>
+          <p class="product-description"><%= product.description %></p>
+          
+          <% if (showCountdown && countdownDeadline) { %>
+            <div class="countdown-timer">
+              <h3>⏰ Livraison le jour même si vous commandez avant 17h !</h3>
+              <div id="countdown-timer"></div>
+              <input type="hidden" id="countdown-deadline" value="<%= countdownDeadline %>">
+            </div>
+          <% } %>
+          
+          <% if (product.inStock) { %>
+            <% if (product.isPersonalized) { %>
+              <div class="personalization-input">
+                <label for="personalization-text">Texte de personnalisation (max <%= product.maxCharacters %> caractères) :</label>
+                <input type="text" id="personalization-text" maxlength="<%= product.maxCharacters %>" placeholder="Entrez votre texte ici">
+              </div>
+            <% } %>
+            
+            <div class="quantity-selector">
+              <label for="product-quantity">Quantité :</label>
+              <input type="number" id="product-quantity" value="1" min="1" max="<%= product.stock %>">
+            </div>
+            
+            <button class="btn-add-to-cart" onclick="addToCart('<%= product._id %>')">Ajouter au panier</button>
+          <% } else { %>
+            <button class="btn-add-to-cart" disabled>Rupture de stock</button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer><div class="footer-content"><div class="footer-section"><h3>Denisia Bijoux</h3></div></div><div class="footer-bottom"><p>&copy; <%= new Date().getFullYear() %> Denisia Bijoux</p></div></footer>
+  <script src="/js/main.js"></script>
+  <script>
+    // Initialiser le compte à rebours si présent
+    <% if (showCountdown && countdownDeadline) { %>
+      const deadline = document.getElementById('countdown-deadline')?.value;
+      if (deadline) {
+        initCountdown(deadline);
+      }
+    <% } %>
+    
+    // Initialiser la galerie d'images
+    initProductGallery();
+  </script>
+  <script src="/js/mobile.js"></script>
+</body>
+</html>

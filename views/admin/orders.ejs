@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/luxury-design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* AJOUT 1: Styles pour les onglets de séparation des commandes */
+    .orders-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .orders-tab {
+      padding: 15px 30px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .orders-tab:hover {
+      color: #d4a853;
+      background: rgba(212, 168, 83, 0.05);
+    }
+    
+    .orders-tab.active {
+      color: #d4a853;
+      border-bottom-color: #d4a853;
+    }
+    
+    .orders-tab-badge {
+      display: inline-block;
+      background: #d4a853;
+      color: white;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+    
+    .orders-section {
+      display: none;
+    }
+    
+    .orders-section.active {
+      display: block;
+    }
+    
+    .section-info {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-info i {
+      color: #d4a853;
+      font-size: 1.2rem;
+    }
+  </style>
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/golden-design.css">
+</head>
+<body class="admin-layout">
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <h2>Denisia Bijoux</h2>
+        <p><%= adminEmail %></p>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="/admin/products"><i class="fas fa-gem"></i> Produits</a></li>
+        <li><a href="/admin/orders" class="active"><i class="fas fa-shopping-bag"></i> Commandes</a></li>
+        <li><a href="/admin/delivery-zones"><i class="fas fa-truck"></i> Livraison</a></li>
+        <li><a href="/admin/pages"><i class="fas fa-file-alt"></i> Pages</a></li>
+      </ul>
+      <a href="/admin/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div class="admin-content">
+      <div class="admin-header">
+        <h1>Gestion des Commandes</h1>
+      </div>
+
+      <!-- AJOUT 1: Onglets pour séparer les commandes -->
+      <div class="orders-tabs">
+        <button class="orders-tab active" onclick="switchTab('pending')">
+          <i class="fas fa-clock"></i> Commandes en cours
+          <span class="orders-tab-badge"><%= pendingOrders.length %></span>
+        </button>
+        <button class="orders-tab" onclick="switchTab('delivered')">
+          <i class="fas fa-check-circle"></i> Commandes desservies
+          <span class="orders-tab-badge"><%= deliveredOrders.length %></span>
+        </button>
+      </div>
+
+      <!-- AJOUT 1: Section Commandes en cours -->
+      <div id="pending-section" class="orders-section active">
+        <div class="section-info">
+          <i class="fas fa-info-circle"></i>
+          <p><strong>Commandes en cours :</strong> Toutes les nouvelles commandes non encore livrées</p>
+        </div>
+
+        <div class="data-table-container">
+          <div class="table-header">
+            <h2>Commandes en cours (<%= pendingOrders.length %>)</h2>
+            <input type="text" class="search-orders" placeholder="Rechercher une commande..." onkeyup="searchOrders('pending')">
+          </div>
+
+          <% if (pendingOrders.length === 0) { %>
+            <div class="empty-state" style="padding: 40px; text-align: center;">
+              <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+              <p style="color: #999;">Aucune commande en cours</p>
+            </div>
+          <% } else { %>
+            <table class="data-table" id="pending-orders-table">
+              <thead>
+                <tr>
+                  <th>Numéro</th>
+                  <th>Client</th>
+                  <th>Montant</th>
+                  <th>Paiement</th>
+                  <th>Statut</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% pendingOrders.forEach(order => { %>
+                  <tr>
+                    <td data-label="Numéro"><strong><%= order.orderNumber %></strong></td>
+                    <td data-label="Client"><%= order.customer.firstName %> <%= order.customer.lastName %></td>
+                    <td data-label="Montant"><strong><%= order.total.toLocaleString('fr-FR') %> FCFA</strong></td>
+                    <td data-label="Paiement">
+                      <% if (order.paymentMethod === 'online') { %>
+                        <span class="badge" style="background: #4caf50;">
+                          <i class="fas fa-mobile-alt"></i> Wave
+                        </span>
+                      <% } else { %>
+                        <span class="badge" style="background: #ff9800;">
+                          <i class="fas fa-money-bill-wave"></i> Livraison
+                        </span>
+                      <% } %>
+                      <br>
+                      <% if (order.paymentStatus === 'paid') { %>
+                        <span class="badge badge-success" style="margin-top: 5px;">Payé</span>
+                      <% } else { %>
+                        <span class="badge badge-warning" style="margin-top: 5px;">En attente</span>
+                      <% } %>
+                    </td>
+                    <td data-label="Statut">
+                      <% if (order.orderStatus === 'pending') { %>
+                        <span class="badge badge-warning">En attente</span>
+                      <% } else if (order.orderStatus === 'confirmed') { %>
+                        <span class="badge badge-info">Confirmé</span>
+                      <% } else if (order.orderStatus === 'processing') { %>
+                        <span class="badge badge-primary">En préparation</span>
+                      <% } else if (order.orderStatus === 'shipped') { %>
+                        <span class="badge" style="background: #9c27b0;">Expédié</span>
+                      <% } else if (order.orderStatus === 'cancelled') { %>
+                        <span class="badge badge-danger">Annulé</span>
+                      <% } %>
+                    </td>
+                    <td data-label="Date"><%= new Date(order.createdAt).toLocaleDateString('fr-FR') %></td>
+                    <td data-label="Actions">
+                      <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-eye"></i> Détails
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- AJOUT 1: Section Commandes desservies (livrées) -->
+      <div id="delivered-section" class="orders-section">
+        <div class="section-info">
+          <i class="fas fa-check-circle"></i>
+          <p><strong>Commandes desservies :</strong> Toutes les commandes marquées comme livrées</p>
+        </div>
+
+        <div class="data-table-container">
+          <div class="table-header">
+            <h2>Commandes desservies (<%= deliveredOrders.length %>)</h2>
+            <input type="text" class="search-orders" placeholder="Rechercher une commande..." onkeyup="searchOrders('delivered')">
+          </div>
+
+          <% if (deliveredOrders.length === 0) { %>
+            <div class="empty-state" style="padding: 40px; text-align: center;">
+              <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+              <p style="color: #999;">Aucune commande desservie</p>
+            </div>
+          <% } else { %>
+            <table class="data-table" id="delivered-orders-table">
+              <thead>
+                <tr>
+                  <th>Numéro</th>
+                  <th>Client</th>
+                  <th>Montant</th>
+                  <th>Paiement</th>
+                  <th>Date commande</th>
+                  <th>Date livraison</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% deliveredOrders.forEach(order => { %>
+                  <tr>
+                    <td data-label="Numéro"><strong><%= order.orderNumber %></strong></td>
+                    <td data-label="Client"><%= order.customer.firstName %> <%= order.customer.lastName %></td>
+                    <td data-label="Montant"><strong><%= order.total.toLocaleString('fr-FR') %> FCFA</strong></td>
+                    <td data-label="Paiement">
+                      <% if (order.paymentMethod === 'online') { %>
+                        <span class="badge" style="background: #4caf50;">
+                          <i class="fas fa-mobile-alt"></i> En ligne
+                        </span>
+                      <% } else { %>
+                        <span class="badge" style="background: #ff9800;">
+                          <i class="fas fa-money-bill-wave"></i> À la livraison
+                        </span>
+                      <% } %>
+                      <br>
+                      <% if (order.paymentStatus === 'paid') { %>
+                        <span class="badge badge-success" style="margin-top: 5px;">Payé</span>
+                      <% } %>
+                    </td>
+                    <td data-label="Date commande"><%= new Date(order.createdAt).toLocaleDateString('fr-FR') %></td>
+                    <td data-label="Date livraison">
+                      <span class="badge badge-success">
+                        <i class="fas fa-check"></i> Livré
+                      </span>
+                      <br>
+                      <small><%= new Date(order.updatedAt).toLocaleDateString('fr-FR') %></small>
+                    </td>
+                    <td data-label="Actions">
+                      <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-eye"></i> Détails
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    // AJOUT 1: Fonction pour changer d'onglet
+    function switchTab(tab) {
+      // Gérer les onglets
+      document.querySelectorAll('.orders-tab').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.closest('.orders-tab').classList.add('active');
+
+      // Gérer les sections
+      document.querySelectorAll('.orders-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(tab + '-section').classList.add('active');
+    }
+
+    // AJOUT 1: Fonction de recherche dans les tableaux
+    function searchOrders(section) {
+      const input = event.target;
+      const filter = input.value.toUpperCase();
+      const table = document.getElementById(section + '-orders-table');
+      
+      if (!table) return;
+      
+      const tr = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < tr.length; i++) {
+        let txtValue = tr[i].textContent || tr[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
