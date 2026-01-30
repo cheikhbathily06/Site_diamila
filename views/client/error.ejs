@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title : 'Erreur' %></title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/luxury-design.css">
-  <link rel="stylesheet" href="/css/responsive.css">
-  <link rel="stylesheet" href="/css/golden-design.css">
-</head>
-<body>
-  <header>
-    <div class="header-container">
-      <a href="/" class="logo"><h1>Denisia Bijoux</h1></a>
-    </div>
-  </header>
-
-  <main>
-    <div class="container" style="text-align: center; padding: 4rem 2rem;">
-      <h1 style="font-size: 4rem; color: var(--danger-color);">⚠️</h1>
-      <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">
-        <%= typeof error !== 'undefined' ? error : 'Une erreur est survenue' %>
-      </h2>
-      <a href="/" class="btn-primary">Retour à l'accueil</a>
-    </div>
-  </main>
-
-  <script src="/js/mobile.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title || 'Erreur' %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/luxury-design.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="stylesheet" href="/css/golden-design.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <a href="/" class="logo"><h1>Denisia Bijoux</h1></a>
+      </div>
+    </header>
+    <main>
+      <div class="container" style="text-align: center; padding: 4rem 2rem">
+        <h1 style="font-size: 4rem; color: var(--danger-color)">⚠️</h1>
+        <h2 style="color: var(--secondary-color); margin-bottom: 1rem">
+          <%= error || 'Une erreur est survenue' %>
+        </h2>
+        <a href="/" class="btn-primary">Retour à l'accueil</a>
+      </div>
+    </main>
+    <script src="/js/mobile.js"></script>
+  </body>
 </html>
